@@ -37,7 +37,7 @@ export class AppMenu {
                     {
                         label: 'Tareas',
                         icon: 'pi pi-fw pi-sliders-v',
-                        routerLink: ['/dashboard-banking'],
+                        routerLink: ['/tareas'],
                     },
                 ],
             },
@@ -77,23 +77,7 @@ export class AppMenu {
                         routerLink: ['/apps/tasklist'],
                     },
                 ],
-            },
-            {
-              //label: 'Cuenta',
-              icon: 'pi pi-fw pi-user',
-              items: [
-                  {
-                      label: 'Cerrar Sesion',
-                      icon: 'pi pi-fw pi-sign-in',
-                      routerLink: ['/auth/login'],
-                  },
-                  {
-                      label: 'Suspender sesion',
-                      icon: 'pi pi-fw pi-eye-slash',
-                      routerLink: ['/auth/lockscreen'],
-                  },
-              ],
-          },
+            }
         ];
     }
 }

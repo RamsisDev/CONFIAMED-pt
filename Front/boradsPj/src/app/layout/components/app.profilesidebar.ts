@@ -22,11 +22,10 @@ import { BadgeModule } from 'primeng/badge';
             styleClass="layout-profile-sidebar w-full sm:w-25rem"
         >
             <div class="flex flex-col mx-auto md:mx-0">
-                <span class="mb-2 font-semibold">Welcome</span>
-                <br>
+                <span class="mb-2 font-semibold">Bienvenido</span>
                 <span
                     class="text-surface-500 dark:text-surface-400 font-medium mb-8"
-                    >Isabella Andolini</span
+                    >User Place Holder</span
                 >
 
                 <ul class="list-none m-0 p-0">
@@ -38,7 +37,9 @@ import { BadgeModule } from 'primeng/badge';
                                 <i class="pi pi-user text-xl text-primary"></i>
                             </span>
                             <div class="ml-4">
-                                <span class="mb-2 font-semibold">Profile</span>
+                                <span class="mb-2 font-semibold">
+                                  Perfil
+                                </span>
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
@@ -52,29 +53,12 @@ import { BadgeModule } from 'primeng/badge';
                             class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
                         >
                             <span>
-                                <i
-                                    class="pi pi-money-bill text-xl text-primary"
-                                ></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold">Billing</span>
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    Amet mimin mıollit
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
                                 <i class="pi pi-cog text-xl text-primary"></i>
                             </span>
                             <div class="ml-4">
-                                <span class="mb-2 font-semibold">Settings</span>
+                                <span class="mb-2 font-semibold">
+                                  Ajustes
+                                </span>
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
@@ -89,11 +73,34 @@ import { BadgeModule } from 'primeng/badge';
                         >
                             <span>
                                 <i
+                                    class="pi pi-eye-slash text-xl text-primary"
+                                ></i>
+                            </span>
+                            <div class="ml-4">
+                                <span class="mb-2 font-semibold">
+                                  Suspender Sesion
+                                </span>
+                                <p
+                                    class="text-surface-500 dark:text-surface-400 m-0"
+                                >
+                                    Sed ut perspiciatis
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
+                        >
+                            <span>
+                                <i
                                     class="pi pi-power-off text-xl text-primary"
                                 ></i>
                             </span>
                             <div class="ml-4">
-                                <span class="mb-2 font-semibold">Sign Out</span>
+                                <span class="mb-2 font-semibold">
+                                  Cerrar Sesion
+                                </span>
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
@@ -106,10 +113,10 @@ import { BadgeModule } from 'primeng/badge';
             </div>
 
             <div class="flex flex-col mt-8 mx-auto md:mx-0">
-                <span class="mb-2 font-semibold">Notifications</span>
+                <span class="mb-2 font-semibold">Notificaciones</span>
                 <span
                     class="text-surface-500 dark:text-surface-400 font-medium mb-8"
-                    >You have 3 notifications</span
+                    >Tienes 3 notificaciones</span
                 >
 
                 <ul class="list-none m-0 p-0">
@@ -124,31 +131,12 @@ import { BadgeModule } from 'primeng/badge';
                             </span>
                             <div class="ml-4">
                                 <span class="mb-2 font-semibold"
-                                    >Your post has new comments</span
+                                    >La tarea #234 tiene comentarios</span
                                 >
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
-                                    5 min ago
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="cursor-pointer flex mb-4 p-4 items-center border border-surface-200 dark:border-surface-700 rounded hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-150"
-                        >
-                            <span>
-                                <i class="pi pi-trash text-xl text-primary"></i>
-                            </span>
-                            <div class="ml-4">
-                                <span class="mb-2 font-semibold"
-                                    >Your post has been deleted</span
-                                >
-                                <p
-                                    class="text-surface-500 dark:text-surface-400 m-0"
-                                >
-                                    15min ago
+                                    hace 5 min
                                 </p>
                             </div>
                         </a>
@@ -164,12 +152,12 @@ import { BadgeModule } from 'primeng/badge';
                             </span>
                             <div class="ml-4">
                                 <span class="mb-2 font-semibold"
-                                    >Post has been updated</span
+                                    >Se ha actuliazdo la tarea #532</span
                                 >
                                 <p
                                     class="text-surface-500 dark:text-surface-400 m-0"
                                 >
-                                    3h ago
+                                    hace 4 horas
                                 </p>
                             </div>
                         </a>
