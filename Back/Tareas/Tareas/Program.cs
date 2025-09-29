@@ -1,0 +1,91 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using Supabase;
+using Tareas.Data;
+using Tareas.Repositories;
+using TareasApi.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+string? supaUrl =
+    Environment.GetEnvironmentVariable("SUPABASE_URL") ??
+    builder.Configuration["Supabase:Url"] ??
+    builder.Configuration["SupabaseUrl"]; 
+
+string? supaKey =
+    Environment.GetEnvironmentVariable("SUPABASE_KEY") ??
+    builder.Configuration["Supabase:Key"] ??
+    builder.Configuration["SupabaseKey"];
+
+if (string.IsNullOrWhiteSpace(supaUrl) || string.IsNullOrWhiteSpace(supaKey))
+    throw new InvalidOperationException("Falta SUPABASE_URL/SUPABASE_KEY o Supabase:Url/Supabase:Key");
+
+
+
+var supaOptions = new SupabaseOptions { AutoConnectRealtime = true, AutoRefreshToken = true };
+builder.Services.AddSingleton(_ => new Supabase.Client(supaUrl!, supaKey!, supaOptions));
+
+
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddHttpClient<UsersClient>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["Services:UsersBaseUrl"]!);
+});
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var log = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    var supabase = scope.ServiceProvider.GetRequiredService<Supabase.Client>();
+    try
+    {
+        await supabase.InitializeAsync();
+
+        var rest = (Supabase.Postgrest.Client)supabase.Postgrest;
+
+        // Opción A (preferida): usar Options.Schema si está disponible en tu versión
+        if (rest.Options != null)
+        {
+            rest.Options.Schema = "confiamed_tarea_system";
+        }
+        else
+        {
+            var prev = rest.GetHeaders;
+            rest.GetHeaders = () =>
+            {
+                var h = prev?.Invoke() ?? new Dictionary<string, string>();
+                h["Accept-Profile"] = "confiamed_tarea_system";  
+                h["Content-Profile"] = "confiamed_tarea_system";  
+                return h;
+            };
+        }
+
+        log.LogInformation("✅ Supabase inicializado. URL={Url}", supaUrl);
+    }
+    catch (Exception ex)
+    {
+        log.LogError(ex, "❌ Error inicializando Supabase");
+    }
+}
+
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tareas API v1");
+});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection(); // solo en dev local
+}
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
