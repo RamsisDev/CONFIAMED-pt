@@ -1,0 +1,28 @@
+version: "1.0"
+
+services:
+  tareas-service:
+    build:
+      context: ./Back/Tareas/Tareas
+      dockerfile: Dockerfile
+    container_name: tareaService
+    ports: 
+      - "5057:5057"
+    networks:
+      - backnet
+
+  front:
+    build:
+      context: ./Front/boradsPj
+      dockerfile: Dockerfile
+    container_name: angfront
+    ports: 
+      - "4200:4200"
+    depends_on:
+      - tareas-service
+    networks:
+      - backnet
+
+networks: 
+  backnet:
+    driver: bridge

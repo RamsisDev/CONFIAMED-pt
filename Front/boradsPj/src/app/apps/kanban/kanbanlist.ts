@@ -48,7 +48,12 @@ import {TooltipModule} from 'primeng/tooltip';
             #listEl
             style="min-height:2rem"
         >
-            <kanban-card *ngFor="let card of list.cards" [card]="card" [listId]="list.listId" (click)="onCardClick($event, card)" cdkDrag [cdkDragDisabled]="isMobileDevice"></kanban-card>
+            <kanban-card *ngFor="let card of list.cards"
+            [card]="card"
+            [listId]="list.listId"
+            (click)="onCardClick($event, card)"
+            cdkDrag
+            [cdkDragDisabled]="isMobileDevice"></kanban-card>
         </div>
         <div class="px-6 mb-4 w-full mt-6 flex">
             <button pButton pRipple label="New Card" icon="pi pi-plus font-semibold" class="py-4 justify-center font-semibold w-full rounded-border" (click)="insertCard()"></button>
@@ -176,9 +181,13 @@ export class KanbanList implements OnInit {
     }
 
     dropCard(event: CdkDragDrop<KanbanCardType[]>): void {
+      const card = event.previousContainer.data[event.previousIndex];
+      const sourceListId = event.previousContainer.id;
+      const targetListId = event.container.id;
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
+            this.kanbanService.moveCard(card, targetListId, sourceListId);
             transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
         }
     }

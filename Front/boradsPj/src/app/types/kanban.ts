@@ -1,22 +1,52 @@
+import { Kanban } from '../apps/kanban/index';
 export interface KanbanCardType {
     id: string;
     title?: string;
     description?: string;
     progress?: number;
-    assignees?: Assignee[];
+    assignees?: Assignee[] | null;
     attachments?: number;
     comments?: Comment[];
-    startDate?: string;
-    dueDate?: string;
+    startDate?: string | Date;
+    dueDate?: string | Date;
     completed?: boolean;
     priority?: Object;
     taskList: TaskList;
 }
 
+
 export interface KanbanListType {
     listId: string;
     title?: string;
     cards: KanbanCardType[];
+}
+
+export interface KanbanListTypeMs {
+  id: number,
+  code: string,
+  title: string,
+  position: number
+}
+
+export interface KabanCardsDto {
+    id: string;
+    listId: number;
+    titulo?: string;
+    descripcion?: string;
+    startDate?: string;
+    dueDate?: string;
+    severidad: number
+    estadoId?: number;
+    asignadoAUsername?: string | string[];
+    attachments?: number;
+    comments?: Comment[];
+    completed?: boolean;
+    creadoEn: Date;
+    actualizadoEnL: Date;
+}
+export interface MoverItemDto {
+  itemId: number,
+  listId: number
 }
 
 export interface Comment {
@@ -45,4 +75,15 @@ export interface Task {
 export interface Assignee {
     name: string;
     image: string;
+}
+
+export interface SaveCardDto {
+  listCode: string;
+  titulo: string;
+  descripcion: string;
+  startDate: string;   // yyyy-MM-dd
+  dueDate: string;     // yyyy-MM-dd
+  severidad: number;
+  asignadoAUsernameId: number;
+  externalId: string;
 }

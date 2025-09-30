@@ -1,1 +1,1 @@
-6xLaHyHDShOJB0cK
+docker-compose up --build -d

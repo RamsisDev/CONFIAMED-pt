@@ -11,14 +11,15 @@ import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
+import { Kanban } from '.';
 
 @Component({
     selector: 'kanban-card',
     standalone: true,
     imports: [CommonModule, TieredMenuModule, ButtonModule, RippleModule, AvatarModule, ProgressBarModule, AvatarGroupModule, CdkDragHandle],
-    template: `<div [id]="card.id" class="flex bg-surface-0 dark:bg-surface-900 flex-col w-full border border-surface p-4 gap-8 hover:bg-surface-50 dark:hover:bg-surface-950 cursor-pointer rounded-border" cdkDragHandle>
+    template: `<div [id]="card.id" class="flex bg-surface-0 dark:bg-surface-900 flex-col w-full border border-surface p-4 gap-8 hover:bg-surface-50 dark:hover:bg-surface-950 cursor-pointer rounded-border" cdkDragHandle (click)="open()">
         <div class="flex justify-between items-center">
-            <span class="text-surface-900 dark:text-surface-0 font-semibold">{{ card.title ? card.title : 'Untitled' }}</span>
+            <span class="text-surface-900 dark:text-surface-0 font-semibold">{{ card.title ? card.title : 'Sin Titulo' }}</span>
             <div>
                 <button pButton pRipple type="button" icon="pi pi-ellipsis-v" rounded text severity="secondary" class="p-trigger" (click)="menu.toggle($event)"></button>
                 <p-tiered-menu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tiered-menu>
@@ -49,14 +50,20 @@ export class KanbanCard implements OnDestroy {
 
     subscription: Subscription;
 
-    constructor(private kanbanService: KanbanService) {
+    constructor(private kanbanService: KanbanService,
+      private parent: Kanban
+    ) {
         this.subscription = this.kanbanService.lists$.subscribe((data) => {
             let subMenu = data.map((d) => ({ id: d.listId, label: d.title, command: () => this.onMove(d.listId) }));
             this.generateMenu(subMenu);
         });
     }
 
-    parseDate(dueDate: string) {
+    open() {
+      this.kanbanService.onCardSelect(this.card, this.listId);
+      this.parent.sidebarVisible = true;
+    }
+    parseDate(dueDate: string | Date) {
         return new Date(dueDate).toDateString().split(' ').slice(1, 3).join(' ');
     }
 
@@ -69,6 +76,7 @@ export class KanbanCard implements OnDestroy {
     }
 
     onMove(listId: string) {
+        console.log("aaa");
         this.kanbanService.moveCard(this.card, listId, this.listId);
     }
 

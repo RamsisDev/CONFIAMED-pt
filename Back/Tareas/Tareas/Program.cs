@@ -35,6 +35,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalAngular",
+        p => p.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
+              );
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -74,6 +84,8 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseSwagger();
+
+app.UseCors("LocalAngular");
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tareas API v1");
@@ -81,11 +93,10 @@ app.UseSwaggerUI(c =>
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseHttpsRedirection(); // solo en dev local
+    app.UseHttpsRedirection(); 
 }
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

@@ -86,12 +86,12 @@ import {StyleClassModule} from 'primeng/styleclass';
                 </div>
                 <div class="grid grid-cols-12 gap-8 pt-8 flex-wrap flex-1 flex-col">
                     <div class="col-span-12 field px-8 flex flex-col gap-4">
-                        <label for="start" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Description</label>
+                        <label for="start" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Descripción</label>
                         <textarea id="description" name="description" type="text" pTextarea [rows]="5" [(ngModel)]="formValue.description" style="resize: none" class="w-full"></textarea>
                     </div>
                     <div class="col-span-12 px-8 flex gap-4">
                         <div class="flex flex-col field w-full gap-4">
-                            <label for="start" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Start Date</label>
+                            <label for="start" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Fecha Inicio</label>
                             <p-datepicker
                                 name="startDate"
                                 dateFormat="yy-mm-dd"
@@ -105,7 +105,7 @@ import {StyleClassModule} from 'primeng/styleclass';
                             ></p-datepicker>
                         </div>
                         <div class="flex flex-col field w-full gap-4">
-                            <label for="due" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Due Date</label>
+                            <label for="due" class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Fecha Fin</label>
                             <p-datepicker
                                 name="endDate"
                                 dateFormat="yy-mm-dd"
@@ -151,7 +151,7 @@ import {StyleClassModule} from 'primeng/styleclass';
                                 </ng-template>
                             </p-inplace>
                         </div>
-                        <textarea type="text" pTextarea name="taskContent" [(ngModel)]="taskContent" style="resize: none" class="w-full mt-6 mb-6" placeholder="Add a task" (keydown.enter)="addTask($event)"></textarea>
+                        <textarea type="text" pTextarea name="taskContent" [(ngModel)]="taskContent" style="resize: none" class="w-full mt-6 mb-6" placeholder="Agregar tarea" (keydown.enter)="addTask($event)"></textarea>
 
                         <ul *ngIf="formValue.taskList?.tasks?.length !== 0" class="list-none p-6 flex flex-col gap-4 bg-surface-50 dark:bg-surface-950 border-surface border rounded-border">
                             <li class="flex items-center gap-4" *ngFor="let task of formValue.taskList?.tasks; let i = index">
@@ -164,7 +164,7 @@ import {StyleClassModule} from 'primeng/styleclass';
                     </div>
 
                     <div class="col-span-12 flex flex-col field px-8">
-                        <label for="assignees" class="block text-surface-900 dark:text-surface-0 font-semibold mb-4 text-lg">Assignees</label>
+                        <label for="assignees" class="block text-surface-900 dark:text-surface-0 font-semibold mb-4 text-lg">Personas Asignadas</label>
                         <p-autocomplete
                             [appendTo]="sidebar"
                             name="assignees"
@@ -198,7 +198,7 @@ import {StyleClassModule} from 'primeng/styleclass';
                     </div>
 
                     <div class="col-span-12 flex flex-col gap-y-6 px-8 mb-12">
-                        <span class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Comments</span>
+                        <span class="block text-surface-900 dark:text-surface-0 font-semibold text-lg">Comentarios</span>
                         <div class="flex items-center">
                             <span class="w-[3.5rem] h-[3.25rem] rounded-full flex items-center justify-center mr-4 bg-surface-200 dark:bg-surface-800">
                                 <i class="pi pi-user"></i>
@@ -226,7 +226,7 @@ import {StyleClassModule} from 'primeng/styleclass';
                 <div class="flex w-full justify-end border-t border-surface py-8 px-8 gap-4">
                     <button pButton pRipple type="button" icon="pi pi-paperclip" class="p-button-outlined p-button-secondary border-surface text-surface-900 dark:text-surface-0 w-12 h-12"></button>
                     <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-outlined p-button-secondary border-surface text-surface-900 dark:text-surface-0 w-12 h-12" (click)="onDelete()"></button>
-                    <button pButton pRipple type="submit" icon="pi pi-check" label="Save" class="p-button-primary h-12"></button>
+                    <button pButton pRipple type="submit" icon="pi pi-check" label="Guardar" class="p-button-primary h-12"></button>
                 </div>
             </form>
         </ng-template>
@@ -266,7 +266,7 @@ export class KanbanSidebar {
 
     assignees: Member[] = [];
 
-    newComment: Comment = { id: '123', name: 'Jane Cooper', text: '' };
+    newComment: Comment = { id: '123', name: 'Jauana Cooper', text: '' };
 
     newTask: Task = { text: '', completed: false };
 
@@ -290,6 +290,30 @@ export class KanbanSidebar {
 
     @ViewChild('inputTaskListTitle') inputTaskListTitle!: ElementRef;
 
+    private toDate(val: unknown): Date | undefined {
+      if (!val) return undefined;
+      if (val instanceof Date) return val;
+      const d = new Date(String(val));
+      return isNaN(d.getTime()) ? undefined : d;
+    }
+
+    private normalizeForForm(c: KanbanCardType): KanbanCardType {
+      const tasks = c.taskList?.tasks ?? [];
+      const progress = typeof c.progress === 'number'
+        ? c.progress
+        : (tasks.length ? Math.round(100 * (tasks.filter(t => t.completed).length / tasks.length)) : 0);
+
+      return {
+        ...c,
+        description: c.description ?? '',
+        assignees: Array.isArray(c.assignees) ? c.assignees : [],
+        comments: Array.isArray(c.comments) ? c.comments : [],
+        startDate: this.toDate(c.startDate),
+        dueDate:   this.toDate(c.dueDate),
+        taskList: c.taskList ?? { title: 'Untitled Task List', tasks: [] },
+        progress
+      };
+    }
     constructor(
         public parent: Kanban,
         private memberService: MemberService,
@@ -299,11 +323,13 @@ export class KanbanSidebar {
 
         this.cardSubscription = this.kanbanService.selectedCard$.subscribe((data) => {
             this.card = data;
-            this.formValue = { ...data };
+            this.formValue = this.normalizeForForm(data);
         });
         this.listSubscription = this.kanbanService.selectedListId$.subscribe((data) => (this.listId = data));
         this.listNameSubscription = this.kanbanService.listNames$.subscribe((data) => (this.listNames = data));
     }
+
+
 
     ngOnDestroy() {
         this.cardSubscription.unsubscribe();
@@ -341,9 +367,12 @@ export class KanbanSidebar {
     }
 
     onSave(event: any) {
+      const idx = this.listNames.findIndex(l => String(l.listId ?? '') === this.listId);
+      const listIndex = idx >= 0 ? idx : 0;
         event.preventDefault();
         this.card = { ...this.formValue };
-        this.kanbanService.updateCard(this.card, this.listId);
+        console.log(listIndex)
+        this.kanbanService.updateCard(this.card, listIndex);
         this.close();
     }
 
