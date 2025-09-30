@@ -29,7 +29,8 @@ builder.Services.AddSingleton(_ => new Supabase.Client(supaUrl!, supaKey!, supaO
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 builder.Services.AddHttpClient<UsersClient>(c =>
 {
-    c.BaseAddress = new Uri(builder.Configuration["Services:UsersBaseUrl"]!);
+    c.BaseAddress = new Uri(builder.Configuration["Services:UsersBaseUrl"]!)
+      ?? throw new InvalidOperationException("Falta Services:UsersBaseUrl");
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

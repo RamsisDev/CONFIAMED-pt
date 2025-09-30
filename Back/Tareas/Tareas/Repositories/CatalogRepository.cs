@@ -113,19 +113,19 @@ namespace Tareas.Repositories
             string? assigneeUsername = null;
             if (tarea.asignadoAUsernameId is long uid)
             {
-                UserById? user;
-                try
-                {
-                    user = await _users.GetByIdAsync(uid, ct); //micro servicio Users
-                }
-                catch (HttpRequestException ex)
-                {
-                    throw new InvalidOperationException("Servicio de Usuarios no disponible.", ex);
-                }
+                //UserById? user;
+                //try
+                //{
+                //    user = await _users.GetByIdAsync(uid, ct); //micro servicio Users
+                //}
+                //catch (HttpRequestException ex)
+                //{
+                //    throw new InvalidOperationException("Servicio de Usuarios no disponible.", ex);
+                //}
 
-                if (user is null) throw new ArgumentException($"Usuario id={uid} no existe.");
-                if (!user.activo) throw new ArgumentException($"Usuario id={uid} está inactivo.");
-                assigneeUsername = user.username;
+                //if (user is null) throw new ArgumentException($"Usuario id={uid} no existe.");
+                //if (!user.activo) throw new ArgumentException($"Usuario id={uid} está inactivo.");
+                //assigneeUsername = user.username;
             }
 
             

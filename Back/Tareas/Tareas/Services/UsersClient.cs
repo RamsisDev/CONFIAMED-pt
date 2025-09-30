@@ -8,11 +8,11 @@ public class UsersClient
     private readonly HttpClient _http;
     public UsersClient(HttpClient http) => _http = http;
 
-    public async Task<UserById?> GetByIdAsync(long id, CancellationToken ct = default)
+    public async Task<bool> GetByIdAsync(long id, CancellationToken ct = default)
     {
-        var res = await _http.GetAsync($"/users/{id}", ct);
-        if (!res.IsSuccessStatusCode) return null;
-        return await res.Content.ReadFromJsonAsync<UserById>(cancellationToken: ct);
+        var res = await _http.GetAsync($"existeUser/{id}", ct);
+        if (!res.IsSuccessStatusCode) return false;
+        return await res.Content.ReadFromJsonAsync<bool>(cancellationToken: ct);
     }
 }
 public record UserById(long id, string username, string? nombre, string? correo, bool activo);

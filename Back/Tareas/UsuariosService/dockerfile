@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+WORKDIR /app
+ENV ASPNETCORE_URLS=http://+:5273
+EXPOSE 5273
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+WORKDIR /src
+
+COPY ["UsuariosService.csproj", "./"]
+RUN dotnet restore "UsuariosService.csproj"
+
+COPY . .
+RUN dotnet publish "UsuariosService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "UsuariosService.dll"]

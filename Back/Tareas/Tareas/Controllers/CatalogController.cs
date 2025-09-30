@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Supabase.Gotrue;
 using Tareas.Contracts;
 using Tareas.Repositories;
+using TareasApi.Services;
 namespace Tareas.Controllers;
 
 
@@ -9,7 +11,13 @@ namespace Tareas.Controllers;
 public class CatalogController : ControllerBase
 {
     private readonly ICatalogRepository _repo;
-    public CatalogController(ICatalogRepository repo) => _repo = repo;
+
+    private readonly UsersClient _userMs;
+    public CatalogController(ICatalogRepository repo, UsersClient userMs)
+    {
+        _repo = repo;
+        _userMs = userMs;
+    }
 
     [HttpGet("kanban-lists")]
     public async Task<ActionResult<IReadOnlyList<KanbanListDto>>> GetKanbanLists(CancellationToken ct)
@@ -62,5 +70,14 @@ public class CatalogController : ControllerBase
     {
         await _repo.CrearItem(item, ct);
         return Ok();
+    }
+
+
+
+    [HttpGet("probarMs")]
+    public async Task<ActionResult<string>> ProbarMs(CancellationToken ct)
+    {
+        var r = await _userMs.GetByIdAsync(1, ct);
+        return Ok(r);
     }
 }

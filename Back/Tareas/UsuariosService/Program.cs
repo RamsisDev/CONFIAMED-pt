@@ -21,11 +21,7 @@ builder.Services.AddSingleton(_ => new Supabase.Client(supaUrl!, supaKey!, supaO
 
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 
-//builder.Services.AddHttpClient<UsersClient>(c =>
-//{
-//    c.BaseAddress = new Uri(builder.Configuration["Services:UsersBaseUrl"]!);
-//});
-
+//peticiones del front
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("LocalAngular",
@@ -35,22 +31,19 @@ builder.Services.AddCors(options =>
               .AllowCredentials()
               );
 });
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("LocalAngular",
-//        p => p.WithOrigins("http://localhost:4200")
-//              .AllowAnyHeader()
-//              .AllowAnyMethod()
-//              .AllowCredentials()
-//              );
-//});
 
-
-
-// Add services to the container.
+// Permitir peticiones desde Tareas
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MSTareas",
+        p => p.WithOrigins("http://localhost:5057")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
+              );
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -95,17 +88,17 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseCors("LocalAngular");
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseCors("MSTareas");
+
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseHttpsRedirection();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
