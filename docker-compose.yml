@@ -8,9 +8,23 @@ services:
     container_name: tareaService
     ports: 
       - "5057:5057"
+    environment:
+      - Services__UsersBaseUrl=http://usuarios-service:8080/
+    depends_on:
+      - usuarios-service
     networks:
       - backnet
-
+  usuarios-service:
+    build:
+      context: ./Back/Tareas/UsuariosService
+      dockerfile: Dockerfile
+    container_name: usuarioSrvs
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "5273:8080"
+    networks:
+      - backnet
   front:
     build:
       context: ./Front/boradsPj
