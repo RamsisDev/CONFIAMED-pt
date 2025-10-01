@@ -12,6 +12,7 @@ using Client = Supabase.Client;
 
 namespace Tareas.Repositories
 {
+
     public class CatalogRepository: ICatalogRepository
     {
         private readonly Client _supabase;
@@ -92,6 +93,18 @@ namespace Tareas.Repositories
                 throw new InvalidOperationException("No se pudo actualizar el item.");
         }
 
+        private async Task<int> CountOpenRelevantTasksAsync(string username, CancellationToken ct)
+        {
+            var q = await _supabase
+                .From<WorkItem>()
+                .Filter("asignado_a_username", Operator.Equals, username)
+                .Filter("severidad", Operator.Equals, 3)    // "relevantes"
+                .Filter("completed", Operator.Equals, false)
+                .Select("id") // Traer solo id para contar
+                .Get(ct);
+
+            return q.Models.Count;
+        }
         public async Task<long> CrearItem (TaskCreateDto tarea, CancellationToken ct)
         {
             if (tarea is null) throw new ArgumentException("Error datos incorrectos.");
@@ -162,4 +175,5 @@ namespace Tareas.Repositories
             }
         }
     }
+
 }

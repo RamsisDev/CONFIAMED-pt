@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Supabase.Gotrue;
+using System.Diagnostics.CodeAnalysis;
 using Tareas.Contracts;
 using Tareas.Repositories;
 using TareasApi.Services;
@@ -68,7 +69,15 @@ public class CatalogController : ControllerBase
     [HttpPost("newItem")]
     public async Task<ActionResult> NewWorkItem([FromBody]TaskCreateDto item,CancellationToken ct)
     {
+        if (item is null) return BadRequest("Payload vacío.");
+        if (item.asignadoAUsernameId is not long userId || userId <= 0)
+            return BadRequest("El campo 'asignadoAUsernameId' es obligatorio y debe ser > 0.");
+        var existeUser = await _userMs.GetByIdAsync(userId, ct);
+        if(!existeUser)
+            return UnprocessableEntity(new { message = $"No existe usuario con id={userId}." });
+        
         await _repo.CrearItem(item, ct);
+
         return Ok();
     }
 
